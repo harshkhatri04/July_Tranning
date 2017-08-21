@@ -1,0 +1,87 @@
+var output = []
+var test = [],
+arr = []
+var fss = require('fs');
+var wr = fss.createWriteStream('yearWise.json')
+var lineReader = require('readline').createInterface({
+  input: require('fs').createReadStream('crimedata.csv')
+});
+lineReader.on('line', function(line) {
+  var jsonFromLine = {};
+  var lineSplit = line.split(',');
+  if (lineSplit[17].length != 4) {
+    if (parseInt(lineSplit[17] / 100000) == 11 || parseInt(lineSplit[17] / 100000) == 12) {
+      var length = lineSplit[17].length - 4;
+      jsonFromLine.Primary_Type = lineSplit[5];
+      jsonFromLine.year = lineSplit[length + 16];
+    } else {
+      var length = lineSplit[17].length - 4;
+      jsonFromLine.Primary_Type = lineSplit[5];
+      jsonFromLine.year = lineSplit[length + 15];
+    }
+
+  } else {
+    jsonFromLine.Primary_Type = lineSplit[5];
+    jsonFromLine.year = lineSplit[17];
+  }
+
+
+  if (jsonFromLine.Primary_Type === 'BURGLARY' || jsonFromLine.Primary_Type === 'ROBBERY') {
+    output.push(jsonFromLine);
+  }
+})
+lineReader.on('close', function(line) {
+  var x = output.reduce((bur, data) => {
+    if (data.Primary_Type == 'BURGLARY') {
+      if (data.year == '2001') bur[0]++
+        if (data.year == '2002') bur[1]++
+          if (data.year == '2003') bur[2]++
+            if (data.year == '2004') bur[3]++
+              if (data.year == '2005') bur[4]++
+                if (data.year == '2006') bur[5]++
+                  if (data.year == '2007') bur[6]++
+                    if (data.year == '2008') bur[7]++
+                      if (data.year == '2009') bur[8]++
+                        if (data.year == '2010') bur[9]++
+                          if (data.year == '2011') bur[10]++
+                            if (data.year == '2012') bur[11]++
+                              if (data.year == '2013') bur[12]++
+                                if (data.year == '2014') bur[13]++
+                                  if (data.year == '2015') bur[14]++
+                                    if (data.year == '2016') bur[15]++
+                                  }
+                                return bur
+                              }, [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0])
+
+  var y = output.reduce((rob, data) => {
+    if (data.Primary_Type == 'ROBBERY') {
+      if (data.year == '2001') rob[0]++
+        if (data.year == '2002') rob[1]++
+          if (data.year == '2003') rob[2]++
+            if (data.year == '2004') rob[3]++
+              if (data.year == '2005') rob[4]++
+                if (data.year == '2006') rob[5]++
+                  if (data.year == '2007') rob[6]++
+                    if (data.year == '2008') rob[7]++
+                      if (data.year == '2009') rob[8]++
+                        if (data.year == '2010') rob[9]++
+                          if (data.year == '2011') rob[10]++
+                            if (data.year == '2012') rob[11]++
+                              if (data.year == '2013') rob[12]++
+                                if (data.year == '2014') rob[13]++
+                                  if (data.year == '2015') rob[14]++
+                                    if (data.year == '2016') rob[15]++
+                                  }
+                                return rob
+                              }, [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0])
+
+  for (let j = 0; j < 16; j++) {
+    var obj = {
+      year: j + 2001,
+      robbery: y[j],
+      burglary: x[j]
+    }
+    arr.push(obj)
+  }
+  wr.write(JSON.stringify(arr, null, 2))
+});
